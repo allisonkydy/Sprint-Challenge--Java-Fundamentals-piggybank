@@ -2,17 +2,22 @@ package piggybank;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Main
 {
   public static double subtract(ArrayList<Coin> arr, double totalValue, double subtractValue)
   {
     double leftToSubtract = subtractValue;
-    for (Coin c : arr)
-    // for(Iterator<Coin> iterator = arr.iterator(); iterator.hasNext();)
+
+    ArrayList<Coin> arrCopy = new ArrayList<Coin>();
+    arrCopy.addAll(arr);
+
+    int removeCount = 0;
+
+    for (int i = 0; i < arrCopy.size(); i++)
     {
-      // Coin c = iterator.next();
+      Coin c =  arrCopy.get(i);
+      int amount = c.getAmount();
       // exit loop if there is nothing left to subtract
       if (leftToSubtract == 0)
       {
@@ -23,7 +28,7 @@ public class Main
       if (c.getValue() <= leftToSubtract)
       {
         // for each coin in the coin's amount
-        for (int i = 0, l = c.getAmount(); i < l; i++)
+        for (int j = 0; j < amount; j++)
         {
           // exit loop if coin's value is greater than the remaining subtract value
           if (Math.round(c.getValue() * 100.0) / 100.0 > Math.round(leftToSubtract * 100.0) / 100.0)
@@ -31,12 +36,16 @@ public class Main
             break;
           }
           
-          // throws error: 
-          // if (i == c.getAmount() - 1)
-          // {
-              // arr.remove(c);
-          //   iterator.remove();
-          // }
+          // if we've reached the last coin, remove it from the array, else decrement amount by 1
+          if (j == amount - 1)
+          {
+            arr.remove(c);
+            removeCount++;
+          }
+          else
+          {
+            arr.get(i - removeCount).setAmount(c.getAmount() - 1);
+          }
 
           // subtract the coin's value from the remaining subtract value
           leftToSubtract -= Math.round(c.getValue() * 100.0) / 100.0;
@@ -78,6 +87,8 @@ public class Main
 
     // remove $1.50 from the piggy bank
     double updatedTotalValue = subtract(piggyBank, totalValue, 1.50);
+
+    piggyBank.forEach(coin -> coin.printAmount());
 
     System.out.println("The piggy bank holds " + fp.format(updatedTotalValue));
   }
