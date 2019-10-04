@@ -7,15 +7,13 @@ public abstract class Coin
   protected int amount;
 
   // constructor
-  public Coin(double value, int amount)
+  public Coin(int amount)
   {
-    this.value = value;
     this.amount = amount;
   }
 
-  public Coin(double value)
+  public Coin()
   {
-    this.value = value;
     amount = 1;
   }
 
