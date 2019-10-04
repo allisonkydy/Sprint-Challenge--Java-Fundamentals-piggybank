@@ -1,7 +1,11 @@
 package piggybank;
 
+import java.text.DecimalFormat;
+
 public abstract class Coin
 {
+  DecimalFormat fp = new DecimalFormat("$###,###.00");
+
   // fields
   protected double value;
   protected int amount;
@@ -18,7 +22,13 @@ public abstract class Coin
   }
 
   // abstract methods
-  public abstract void printTotal();
+  public abstract void printAmount();
+  
+  // default methods
+  public void printTotalValue()
+  {
+    System.out.println(fp.format(value * amount));
+  }
 
   // getters and setters
   public double getValue()
