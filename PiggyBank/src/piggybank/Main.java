@@ -24,5 +24,13 @@ public class Main
 
     // print contents of piggybank
     piggyBank.forEach(coin -> coin.printAmount());
+
+    // print value of piggybank
+    double totalValue = 0;
+    for(int i = 0; i < piggyBank.size(); i++)
+    {
+      totalValue += piggyBank.get(i).getTotalValue();
+    }
+    System.out.println("The piggy bank holds " + fp.format(totalValue));
   }
 }

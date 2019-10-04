@@ -30,6 +30,11 @@ public abstract class Coin
     System.out.println(fp.format(value * amount));
   }
 
+  public double getTotalValue()
+  {
+    return (value * amount);
+  }
+
   // getters and setters
   public double getValue()
   {
