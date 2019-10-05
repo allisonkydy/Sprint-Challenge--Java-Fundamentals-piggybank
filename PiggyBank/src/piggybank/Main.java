@@ -5,35 +5,37 @@ import java.util.ArrayList;
 
 public class Main
 {
-  public static double subtract(ArrayList<Coin> arr, double totalValue, double subtractValue)
+  // create collection for piggybank
+  public static ArrayList<Coin> piggyBank = new ArrayList<Coin>();
+
+  public static void subtract(double subtractValue)
   {
-    double leftToSubtract = subtractValue;
+    piggyBank.sort((c1, c2) -> (int)(c2.getValue() * 100) - (int)(c1.getValue() * 100));
 
-    arr.sort((c1, c2) -> (int)(c2.getValue() * 100) - (int)(c1.getValue() * 100));
-
-    ArrayList<Coin> arrCopy = new ArrayList<Coin>();
-    arrCopy.addAll(arr);
+    ArrayList<Coin> fakeBank = new ArrayList<Coin>();
+    fakeBank.addAll(piggyBank);
 
     int removeCount = 0;
 
-    for (int i = 0; i < arrCopy.size(); i++)
+    for (int i = 0; i < fakeBank.size(); i++)
     {
-      Coin c =  arrCopy.get(i);
-      int amount = c.getAmount();
       // exit loop if there is nothing left to subtract
-      if (leftToSubtract == 0)
+      if (Math.round(subtractValue * 100.0) / 100.0 == 0.00)
       {
         break;
       }
 
+      Coin c =  fakeBank.get(i);
+      int amount = c.getAmount();
+
       // if the coin's is less than or equal to the remaining subtract value
-      if (c.getValue() <= leftToSubtract)
+      if (c.getValue() <= subtractValue)
       {
         // for each coin in the coin's amount
         for (int j = 0; j < amount; j++)
         {
           // exit loop if coin's value is greater than the remaining subtract value
-          if (Math.round(c.getValue() * 100.0) / 100.0 > Math.round(leftToSubtract * 100.0) / 100.0)
+          if (Math.round(c.getValue() * 100.0) / 100.0 > Math.round(subtractValue * 100.0) / 100.0)
           {
             break;
           }
@@ -41,31 +43,25 @@ public class Main
           // if we've reached the last coin, remove it from the array, else decrement amount by 1
           if (j == amount - 1)
           {
-            arr.remove(c);
+            piggyBank.remove(c);
             removeCount++;
           }
           else
           {
-            arr.get(i - removeCount).setAmount(c.getAmount() - 1);
+            piggyBank.get(i - removeCount).setAmount(c.getAmount() - 1);
           }
 
           // subtract the coin's value from the remaining subtract value
-          leftToSubtract -= Math.round(c.getValue() * 100.0) / 100.0;
+          subtractValue -= Math.round(c.getValue() * 100.0) / 100.0;
         }
       }
     }
-
-    // return updated total value
-    return (totalValue - (subtractValue - leftToSubtract));
-  }
+   }
 
   public static void main(String[] args)
   {
     // decimal formatting
-    DecimalFormat fp = new DecimalFormat("$###,###.00");
-
-    // create collection for piggybank
-    ArrayList<Coin> piggyBank = new ArrayList<Coin>();
+    DecimalFormat fp = new DecimalFormat("$###,##0.00");
 
     // add coins to piggybank
     piggyBank.add(new Quarter());
@@ -88,10 +84,16 @@ public class Main
     System.out.println("The piggy bank holds " + fp.format(totalValue));
 
     // remove $1.50 from the piggy bank
-    double updatedTotalValue = subtract(piggyBank, totalValue, 1.50);
+    subtract(1.50);
 
     piggyBank.forEach(coin -> coin.printAmount());
 
-    System.out.println("The piggy bank holds " + fp.format(updatedTotalValue));
+    totalValue = 0.00;
+    for(int i = 0; i < piggyBank.size(); i++)
+    {
+      totalValue += piggyBank.get(i).getTotalValue();
+    }
+
+    System.out.println("The piggy bank holds " + fp.format(totalValue));
   }
 }
