@@ -9,6 +9,8 @@ public class Main
   {
     double leftToSubtract = subtractValue;
 
+    arr.sort((c1, c2) -> (int)(c2.getValue() * 100) - (int)(c1.getValue() * 100));
+
     ArrayList<Coin> arrCopy = new ArrayList<Coin>();
     arrCopy.addAll(arr);
 
